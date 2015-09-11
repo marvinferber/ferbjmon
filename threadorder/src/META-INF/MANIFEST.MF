@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: libbatik/batik.jar
+Boot-Class-Path: javassist.jar 
+Premain-Class: de.ubt.ferbjmon.threadorder.JavaAgent
+

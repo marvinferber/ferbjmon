@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Boot-Class-Path: javassist.jar 
+Premain-Class: de.ubt.ferbjmon.callgraph.JavaAgent
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGDIR=${LOGDIR:-$DIR/capture}
+#run the java command with some additional command line
+java -Xbootclasspath/p:$DIR/threadorder.jar -javaagent:$DIR/threadorder.jar=$LOGDIR/threadorder.log "$@"
+#run the analysis 
+java -cp $DIR/threadorder.jar de.ubt.ferbjmon.threadorder.analysis.ThreadOrderAnalyzer $LOGDIR/threadorder.log $LOGDIR

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<!-- =================================================================== -->
+<!-- FerbJmon threadorder build file                                                    -->
+<!-- =================================================================== -->
+
+<project name="ferbjmon-threadorder" default="jar" basedir=".">
+
+  <property name="dist-version" value="ferbjmon-threadorder-0.1.2"/>
+
+  <property environment="env"/>
+  <property name="target.jar" value="${basedir}/../dist/threadorder.jar"/>
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="common-src.dir" value="${basedir}/../common-src"/>
+  <property name="build.dir" value="${basedir}/../build/threadorder"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+  <property name="batik.dir" value="${basedir}/../3rdparty-libs/batik"/>
+  <property name="javassist.dir" value="${basedir}/../3rdparty-libs/javassist"/>
+
+  <!-- Build classpath -->
+  <path id="classpath">
+    <fileset dir="${batik.dir}">
+      <include name="batik.jar"/>
+    </fileset>
+    <fileset dir="${javassist.dir}">
+      <include name="javassist.jar"/>
+    </fileset>
+    <pathelement location="${build.classes.dir}"/>
+  </path>
+
+  <property name="build.classpath" refid="classpath"/>
+  
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare" >
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare">
+    <javac destdir="${build.classes.dir}"
+           debug="on"
+           deprecation="on"
+           optimize="off"
+           includes="**">
+           <src path="${src.dir}"/>
+           <src path="${common-src.dir}"/>
+           <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Create the JAR file                                                 -->
+  <!-- =================================================================== -->
+
+  <target name="jar" depends="compile">
+    <jar jarfile="${target.jar}" update="true" manifest="${src.dir}/META-INF/MANIFEST.MF">
+      <fileset dir="${build.classes.dir}">
+      	  <include name="**/*.class"/>
+      </fileset>
+     </jar>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Clean                                                               -->
+  <!-- =================================================================== -->
+
+  <target name="clean">
+    <delete dir="build"/>
+    <delete file="${target.jar}"/>
+  </target>
+
+</project>

@@ -1,0 +1,6 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGDIR=${LOGDIR:-$DIR/capture}
+#run the java command with some additional command line..analysis is already included
+java -Xbootclasspath/p:$DIR/callgraph.jar -javaagent:$DIR/callgraph.jar=$LOGDIR/callgraph.dot "$@"
+
