@@ -19,7 +19,7 @@ The FerbJmon Tool `java_threadorder` uses a modified `java.lang.Thread` class, w
 1. for building the following packages are required: java-jdk, ant, zip, unzip, git ;-)
 1. clone FerbJmon into a local folder (`git clone https://github.com/marvinferber/ferbjmon.git`)
 2. cd to the newly created git repo of FerbJmon (`cd ferbjmon`)
-3. get the dependencies using the script provided (`./getdependencies.sh`)
+3. get the dependencies using the script provided (`./get_dependencies.sh`)
 4. build the FerbJmon Tools using the script provided (`./make_dist.sh`)
 5. on successful completion everything needed will be located in the `dist` folder and can be invoked from any directory 
 

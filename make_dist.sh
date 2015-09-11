@@ -9,7 +9,7 @@ echo "==> Building threadorder"
 cd threadorder
 ant
 cd ..
-echo "==> Copying wrapper skripts and 3rd party libs to dist"
+echo "==> Copying wrapper scripts and 3rd party libs to dist"
 mkdir -p dist/libbatik
 cp 3rdparty-libs/batik/*.jar dist/libbatik/
 cp 3rdparty-libs/batik/NOTICE dist/libbatik/
@@ -18,7 +18,7 @@ cp -r 3rdparty-libs/batik/extensions dist/libbatik/
 cp -r 3rdparty-libs/batik/lib dist/libbatik/
 cp 3rdparty-libs/javassist/javassist.jar dist/
 cp 3rdparty-libs/javassist/License.html dist/javasisst_license.html
-cp skripts/java_* dist/
+cp scripts/java_* dist/
 echo "==> Build finished"
 echo "==> Creating common output folder for visualizations: capture"
 mkdir -p dist/capture
