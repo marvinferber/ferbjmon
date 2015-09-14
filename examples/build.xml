@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!-- =================================================================== -->
+<!-- FerbJmon examples build file                                                    -->
+<!-- =================================================================== -->
+
+<project name="ferbjmon-examples" default="compile" basedir=".">
+
+  <property name="dist-version" value="ferbjmon-examples-0.1.2"/>
+
+  <property environment="env"/>
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="build.dir" value="${basedir}/../build/examples"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+  <property name="ferbjmon.dist.dir" value="${basedir}/../dist"/>
+
+  <!-- Build classpath -->
+  <path id="classpath">
+    <fileset dir="${ferbjmon.dist.dir}">
+      <include name="threadorder.jar"/>
+    </fileset>
+    <pathelement location="${build.classes.dir}"/>
+  </path>
+
+  <property name="build.classpath" refid="classpath"/>
+  
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare" >
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source code                                            -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare">
+    <javac destdir="${build.classes.dir}"
+           debug="on"
+           deprecation="on"
+           optimize="off"
+           includes="**">
+           <src path="${src.dir}"/>
+           <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Clean                                                               -->
+  <!-- =================================================================== -->
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+</project>
