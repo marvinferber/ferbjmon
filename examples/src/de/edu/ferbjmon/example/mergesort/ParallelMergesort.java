@@ -16,65 +16,102 @@
 
 package de.edu.ferbjmon.example.mergesort;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import de.ubt.ferbjmon.annotation.Monitored;
 
 @Monitored
 public class ParallelMergesort {
 
-	private ArrayList<Integer> array;
-	private boolean first = true;
+	private int[] array;
+	int threadid = 1;
 
-	public ParallelMergesort(ArrayList<Integer> array) {
+	/**
+	 * @param array
+	 */
+	public ParallelMergesort(int[] array) {
+		// some little sleep to make this constructor call visible in a timeline
+		// diagram
 		try {
-			Thread.sleep(5);
+			Thread.sleep(200);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		this.array = array;
 
 	}
 
-	public void sort(final int start, final int end) {
-		if ((end - start) + 1 < 2)
+	/**
+	 * @param start
+	 * @param end
+	 * @param numthreads
+	 */
+	public void sort(final int start, final int end, final int numthreads) {
+		// sort rest of array directly if array.length / 4 to avoid confusing
+		// recursion depth in meregsort output
+		if ((end - start) + 1 == array.length / 4) {
+			Arrays.sort(array, start, end + 1);
 			return;
+		}
+		// short sleep to make recursion visible in timeline diagram
 		try {
-			Thread.sleep(5);
+			Thread.sleep(200);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
-		if (first) {
-			first = false;
+		// start threads depending on needs
+		boolean createThreads;
+		switch (numthreads) {
+		case 1:
+			// single thread
+			createThreads = (end - start) + 1 > array.length;
+			break;
+		case 2:
+			// two threads
+			createThreads = (end - start) + 1 == array.length;
+			break;
+		case 4:
+			// four threads
+			createThreads = (end - start) + 1 <= array.length;
+			break;
+
+		default:
+			// bad value falling back to single thread
+			System.out.println("bad value falling back to single thread: 1");
+			createThreads = (end - start) + 1 > array.length;
+			break;
+		}
+
+		if (createThreads) {
 			Thread t1 = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-
 					int newend = start + ((end - start) / 2);
+					// avoid sort if current array.length =1
 					if ((newend - start) + 1 >= 2)
-						sort(start, newend);
+						sort(start, newend, numthreads);
 				}
 			});
-			t1.setName(start + "<-->" + (start + ((end - start) / 2)));
+			t1.setName("T" + threadid);
 			t1.start();
+			threadid++;
 
 			Thread t2 = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
 					int newstart = start + ((end - start) / 2) + 1;
+					// avoid sort if current array.length =1
 					if ((end - newstart) + 1 >= 2)
-						sort(newstart, end);
+						sort(newstart, end, numthreads);
 				}
 			});
-			t2.setName((start + ((end - start) / 2) + 1) + "<-->" + end);
+			t2.setName("T" + threadid);
 			t2.start();
-
+			threadid++;
+			// join threads before merge
 			try {
 				t1.join();
 				t2.join();
@@ -83,54 +120,54 @@ public class ParallelMergesort {
 			}
 
 		} else {
+			// if no threads were created do recursion in current thread
 			int newend = start + ((end - start) / 2);
 			if ((newend - start) + 1 >= 2)
-				sort(start, newend);
+				sort(start, newend, numthreads);
 			int newstart = start + ((end - start) / 2) + 1;
 			if ((end - newstart) + 1 >= 2)
-				sort(newstart, end);
+				sort(newstart, end, numthreads);
 
 		}
-		try {
-			Thread.sleep(5);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		// merge partially sorted chunks
 		merge(start, end);
 	}
 
+	/**
+	 * @param start
+	 * @param end
+	 */
 	public void merge(int start, int end) {
+		// add a very short delay to make merge better visible in timeline
+		// diagram
 		try {
 			Thread.sleep(5);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
+		// perform merge using a temporary array
+		int length = end - start + 1;
+		int[] tmp = new int[length];
+		System.arraycopy(array, start, tmp, 0, length);
 
-		Integer[] neu = new Integer[end - start + 1];
-		array.subList(start, end + 1).toArray(neu);
-		Integer[] neuer = new Integer[neu.length];
-		System.arraycopy(neu, 0, neuer, 0, neu.length);
-		List<Integer> tmp = Arrays.asList(neuer);
-
-		int i = 0, j = 0, k = tmp.size() / 2;
+		int i = 0, j = 0, k = tmp.length / 2;
 		for (i = start; i <= end; i++) {
-			if (j == tmp.size() / 2) {
-				array.set(i, tmp.get(k));
+			if (j == tmp.length / 2) {
+				array[i] = tmp[k];
 				k++;
 				continue;
 			}
-			if (k == tmp.size()) {
-				array.set(i, tmp.get(j));
+			if (k == tmp.length) {
+				array[i] = tmp[j];
 				j++;
 				continue;
 			}
-			if (tmp.get(j) < tmp.get(k)) {
-				array.set(i, tmp.get(j));
+			if (tmp[j] < tmp[k]) {
+				array[i] = tmp[j];
 				j++;
 			} else {
-				array.set(i, tmp.get(k));
+				array[i] = tmp[k];
 				k++;
 			}
 		}

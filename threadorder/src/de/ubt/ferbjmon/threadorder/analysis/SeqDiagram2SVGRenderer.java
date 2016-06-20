@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,8 @@ import org.w3c.dom.Element;
 
 public class SeqDiagram2SVGRenderer {
 	
-	final float fontsize = (float) 10.0;
-	final int scalefactor=1000;
+	final float fontsize = (float) 20.0;
+	final int scalefactor=172;
 
 	class EventTupel {
 		public String targetName;
@@ -70,11 +71,11 @@ public class SeqDiagram2SVGRenderer {
 		SVGGraphics2D g = new SVGGraphics2D(doc);
 
 		int startx = 10;
-		int starty = 10;
+		int starty = (int)fontsize;//10;
 		//int scalefactor = 10000;
 		for (String objectEntity : strings) {
 			Font old = g.getFont();
-			Font neu = old.deriveFont(Font.BOLD);
+			Font neu = old.deriveFont(fontsize);
 			g.setFont(neu);
 			g.drawString(objectEntity, startx, starty);
 			g.setFont(old);
@@ -119,13 +120,21 @@ public class SeqDiagram2SVGRenderer {
 		}
 		// Fehler finden
 		findErrors(eventList);
+        // sort by thread names
+        String[] threadnames=objectEntity.getThreadEntities();
+        Arrays.sort(threadnames);
 		// Diagramm malen
-		for (String threadEntity : objectEntity.getThreadEntities()) {
+		for (String threadEntity : threadnames) {
 			int maxversatz = 0;
 			int versatz = 0;
 			int actual_y = starty * 2;
 			threadEntities.put(threadEntity, startx);
+            // set font
+            Font old = svg2d.getFont();
+			Font neu = old.deriveFont(fontsize);
+			svg2d.setFont(neu);
 			svg2d.drawString(threadEntity, startx, starty);
+            svg2d.setFont(old);
 			int tmp = actual_y;
 			// short lastevent = MonitoredEvent.EXIT_CONSTRUCTOR;
 			Stack<TimeEvent> teStack = new Stack<TimeEvent>();
@@ -165,8 +174,8 @@ public class SeqDiagram2SVGRenderer {
 									dStruct.getMaxTimeStamp(),
 									te.getTimestamp());
 					svg2d.setPaint(Color.black);
-					Font old = svg2d.getFont();
-					Font neu = old.deriveFont(fontsize);
+					old = svg2d.getFont();
+					neu = old.deriveFont(fontsize);
 					svg2d.setFont(neu);
 					svg2d.drawString(lastEvent.getTargetName(), startx + 21
 							+ versatz, actual_y + 1);
@@ -175,7 +184,8 @@ public class SeqDiagram2SVGRenderer {
 							- actual_y);
 					if (haserror(eventList, lastEvent.getTimestamp(),
 							te.getTimestamp()))
-						svg2d.setPaint(Color.red);
+						//svg2d.setPaint(Color.red);
+                        svg2d.setPaint(Color.lightGray);
 					else
 						svg2d.setPaint(Color.lightGray);
 					svg2d.fillRect(startx + versatz, actual_y, 20, tmp
