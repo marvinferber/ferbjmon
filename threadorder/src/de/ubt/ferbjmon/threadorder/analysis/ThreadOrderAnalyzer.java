@@ -38,8 +38,7 @@ public class ThreadOrderAnalyzer {
 			outputfolderstr = args[1];
 		} catch (Exception e1) {
 			System.out.println("Command line parameters are wrong or missing!");
-			System.out
-					.println("Usage: java -jar javamon2svg.jar <inputfile> <outputfolder>");
+			System.out.println("Usage: java -jar javamon2svg.jar <inputfile> <outputfolder>");
 			e1.printStackTrace();
 			System.exit(-1);
 		}
@@ -53,15 +52,18 @@ public class ThreadOrderAnalyzer {
 		try {
 			t2sd.readTrace(inputfile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: " + inputfile + " could not be opened for reading. "
+					+ "This is likely due to a failed preceding ferbjmon monitoring module. "
+					+ "Make sure the file path exists. (" + ThreadOrderAnalyzer.class.getName() + " : line "
+					+ new Throwable().getStackTrace()[0].getLineNumber() + ")");
 		}
 		t2sd.createSVG();
 		try {
 			t2sd.writeSvgFile(outputfolder);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("ERROR: " + outputfolder + " could not be opened for writing. "
+					+ "Make sure the file path exists. (" + ThreadOrderAnalyzer.class.getName() + " : line "
+					+ new Throwable().getStackTrace()[0].getLineNumber() + ")");
 		} catch (TransformerFactoryConfigurationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

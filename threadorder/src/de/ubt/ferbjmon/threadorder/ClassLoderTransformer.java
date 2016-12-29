@@ -30,7 +30,7 @@ import javassist.bytecode.BadBytecode;
 
 public class ClassLoderTransformer implements ClassFileTransformer {
 
-	public byte[] transform(ClassLoader loader, String className, Class clazz,
+	public byte[] transform(ClassLoader loader, String className, @SuppressWarnings("rawtypes") Class clazz,
 			java.security.ProtectionDomain domain, byte[] bytes) {
 		// System.out.println("Transformiere" + className);
 		return enhanceClass(className, bytes);

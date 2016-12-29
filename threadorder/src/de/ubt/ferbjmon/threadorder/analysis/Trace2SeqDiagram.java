@@ -47,8 +47,7 @@ public class Trace2SeqDiagram {
 		while ((line = buf.readLine()) != null) {
 			String[] chunks = line.split(" ");
 			try {
-				MonitoredEvent item = new MonitoredEvent(chunks[0], chunks[1],
-						chunks[2], chunks[3], chunks[4]);
+				MonitoredEvent item = new MonitoredEvent(chunks[0], chunks[1], chunks[2], chunks[3], chunks[4]);
 				s.add(item);
 			} catch (NoSuchEvenType e) {
 				e.printStackTrace();
@@ -63,37 +62,32 @@ public class Trace2SeqDiagram {
 		// gleich richtig zusammensortiert
 
 		for (MonitoredEvent evt : s) {
-			dStruct.appendDataset(evt.getObjectId(), evt.getEntityId(),
-					evt.getTimestamp(), evt.getEventType(), evt.getTargetName());
+			dStruct.appendDataset(evt.getObjectId(), evt.getEntityId(), evt.getTimestamp(), evt.getEventType(),
+					evt.getTargetName());
 		}
 	}
 
 	public void createSVG() {
 
 		SeqDiagram2SVGRenderer renderer = new SeqDiagram2SVGRenderer(dStruct);
-		dStruct.populateSVGDiagramDocument("threadorder",
-				renderer.makeSequenceDiagram(dStruct.getObjectEntities()));
+		dStruct.populateSVGDiagramDocument("threadorder", renderer.makeSequenceDiagram(dStruct.getObjectEntities()));
 
 	}
 
-	public void writeSvgFile(File svgFile) throws IOException,
-			TransformerFactoryConfigurationError, TransformerException {
+	public void writeSvgFile(File svgFile)
+			throws IOException, TransformerFactoryConfigurationError, TransformerException {
 		if (!svgFile.isDirectory())
-			throw new FileNotFoundException(svgFile.getPath()
-					+ "was not found!");
+			throw new FileNotFoundException(svgFile.getPath() + " was not found!");
 		for (String objectEntity : dStruct.getDiagrams()) {
-			File f = new File(svgFile.getAbsolutePath() + File.separator
-					+ objectEntity + ".svg");
+			File f = new File(svgFile.getAbsolutePath() + File.separator + objectEntity + ".svg");
 			f.createNewFile();
 			System.out.println("Writing outputfile: " + f.getAbsolutePath());
 			FileOutputStream fstream = new FileOutputStream(f);
 
-			DOMSource src = new DOMSource(
-					dStruct.getObjectDiagramDocument(objectEntity));
+			DOMSource src = new DOMSource(dStruct.getObjectDiagramDocument(objectEntity));
 			Result res = new StreamResult(fstream);
 			// Write the DOM document to the file
-			Transformer xformer = TransformerFactory.newInstance()
-					.newTransformer();
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.transform(src, res);
 			fstream.close();
 		}

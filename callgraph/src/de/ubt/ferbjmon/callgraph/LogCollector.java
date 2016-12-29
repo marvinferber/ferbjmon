@@ -30,7 +30,7 @@ public class LogCollector {
 
 	private Set<String> globalSet = null;
 	private List<Set<String>> globalSetList = null;
-	private BufferedWriter dotFile=null;
+	private BufferedWriter dotFile = null;
 
 	private LogCollector() {
 		globalSet = new HashSet<String>();
@@ -49,7 +49,7 @@ public class LogCollector {
 		for (Set<String> logentries : globalSetList)
 			globalSet.addAll(logentries);
 		// Write all logs to a file
-		 
+
 		// replace .
 		dotFile.write("digraph " + this.hashCode() + "{\n");
 		for (String s : globalSet)
@@ -63,8 +63,8 @@ public class LogCollector {
 	}
 
 	public void setLogfile(String agentArgument) throws IOException {
-		dotFile= new BufferedWriter(new FileWriter(agentArgument));
-		
+		dotFile = new BufferedWriter(new FileWriter(agentArgument));
+
 	}
 
 }
